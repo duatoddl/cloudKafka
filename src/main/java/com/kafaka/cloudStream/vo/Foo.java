@@ -1,28 +1,22 @@
 package com.kafaka.cloudStream.vo;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+
 /**
  *
  * author         : AD01701301
  * date           : 2022-06-13
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Foo {
 
 	private String foo;
-
-	public Foo() {
-	}
-
-	public Foo(String foo) {
-		this.foo = foo;
-	}
-
-	public String getFoo() {
-		return this.foo;
-	}
-
-	public void setFoo(String foo) {
-		this.foo = foo;
-	}
 
 	@Override
 	public String toString() {

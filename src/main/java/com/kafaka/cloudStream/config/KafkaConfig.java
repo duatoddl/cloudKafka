@@ -29,12 +29,6 @@ import java.util.Base64;
 @Configuration
 public class KafkaConfig {
 
-	private final Logger logger = LoggerFactory.getLogger(KafkaConfig.class);
-	private final TaskExecutor exec = new SimpleAsyncTaskExecutor();
-
-	/*
-	 * Boot will autowire this into the container factory.
-	 */
 	@Bean
 	public SeekToCurrentErrorHandler errorHandler(KafkaOperations<Object, Object> kafkaTemplate) {
 		return new SeekToCurrentErrorHandler(
@@ -54,28 +48,6 @@ public class KafkaConfig {
 	@Bean
 	public NewTopic dlt() {
 		return new NewTopic("firstTopic.DLT", 1, (short) 1);
-	}
-
-	@KafkaListener(id="fooGroup", topics = "firstTopic")
-	public void firstListen(Foo2 fst) {
-		logger.info("Received from firstTopic: " + fst);
-		if(fst.getFoo().startsWith("fail")) {
-			throw new RuntimeException("failed");
-		}
-		this.exec.execute(() -> System.out.println("firstGroup..." + fst));
-	}
-
-	/**
-	 * dead letter topic
-	 *
-	 * @param in
-	 */
-	@KafkaListener(id="dltGroup", topics = "firstTopic.DLT")
-	public void dltListen(String in) throws UnsupportedEncodingException {
-		logger.info("Received from DLT: " + in);
-		Base64.Decoder decoder = Base64.getDecoder();
-		String decodedString = new String(decoder.decode(in), "UTF-8");
-		this.exec.execute(() -> System.out.println("DLT..."  + decodedString));
 	}
 
 	@Bean
